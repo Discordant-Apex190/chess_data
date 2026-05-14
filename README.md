@@ -1,0 +1,1 @@
+Start of project analyzing my chess data and possibly help others too!
