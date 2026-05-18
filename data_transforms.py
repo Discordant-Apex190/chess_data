@@ -57,7 +57,7 @@ class ChessDataTransforms():
                     game_info = {
                         "Game_Number": game_number,
                         "Game_Link": headers['Link'],
-                        "Move Number": move_number,
+                        "Move_Number": move_number,
                         "Move": str(move),
                         "Evaluation": eval_info,
                         "White": headers['White'],

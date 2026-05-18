@@ -29,7 +29,6 @@ Frontend coming eventually to visualize all this.
 
 
 ## Todo:
-Add this:
 Centipawn Loss Math
 For each move, calculate the difference between the evaluation before and after the move, from the moving player's perspective:
 White's move (odd move numbers):
