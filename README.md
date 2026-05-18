@@ -26,3 +26,17 @@ Frontend coming eventually to visualize all this.
 - **Chess**: python-chess, Stockfish
 - **Orchestration**: Prefect
 - **API**: Chess.com Public API
+
+
+## Todo:
+Add this:
+Centipawn Loss Math
+For each move, calculate the difference between the evaluation before and after the move, from the moving player's perspective:
+White's move (odd move numbers):
+    CP_loss = eval_before - eval_after
+Black's move (even move numbers):
+    CP_loss = -eval_before - (-eval_after) = eval_after - eval_before
+
+Per player across all games:
+    ACPL_white = sum(all_white_cp_losses) / total_white_moves
+    ACPL_black = sum(all_black_cp_losses) / total_black_moves
