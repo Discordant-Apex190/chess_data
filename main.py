@@ -10,7 +10,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-    file_to_remove = Path(f"initial_chess_data_{date.today().isoformat()}.parquet")
+    file_to_remove = Path(f"data/initial_chess_data_{date.today().isoformat()}.parquet")
     print(f'Removing {file_to_remove}')
     file_to_remove.unlink(missing_ok=True)
 
