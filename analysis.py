@@ -2,7 +2,7 @@ import duckdb
 from pathlib import Path
 
 duckdb_conn = duckdb.connect()
-file_path = Path('data\cleaned_chess_data_2026-05-17.parquet')
+file_path = Path('data\cleaned_chess_data_2026-05-18.parquet')
 
 
 file_name = str(file_path)

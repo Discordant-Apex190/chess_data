@@ -6,37 +6,55 @@ from data_ops import ChessDataOps
 import tqdm
 import polars as pl
 from datetime import date
+from base_logger import logger
 
-stockfish_path = Path(r"C:\Users\Chris\stockfish\stockfish-windows-x86-64-avx2.exe")
-stockfish = Stockfish(path = str(stockfish_path))
-stockfish.set_depth(10)
 chess_ops = ChessDataOps()
-
 class ChessDataTransforms():
+    """
+    A class representing data transformations for chess data
+
+    Attributes:
+        initial_chess_data (Path): The Path object for the initial chess data we are pulling
+        cleaned_chess_data (Path): The Path object for the cleaned chess data
+        stockfish (Stockfish): Initialize stockfish
+
+    """
     def __init__(self):
+        stockfish_path = Path(r"C:\Users\Chris\stockfish\stockfish-windows-x86-64-avx2.exe")
+        self.stockfish = Stockfish(path = str(stockfish_path))
+        self.stockfish.set_depth(10)
+        
         today = date.today().isoformat()
         self.initial_chess_data = Path(f"data/initial_chess_data_{today}.parquet")
         self.cleaned_chess_data = Path(f"data/cleaned_chess_data_{today}.parquet")
     
     def clean_data(self) -> None:
+        """
+        Cleans up the initital chess data, and adds evals from stockfish
+        Args:
+            None
+        Returns:
+            None
+        """
+        
         chess_ops.save_data(self.initial_chess_data)
         rel = chess_ops.get_rel_from_parquet(self.initial_chess_data)
-        url_not_null = rel.filter("url IS NOT NULL").select("pgn")
-        df = url_not_null.pl()
+        pgn_not_null = rel.filter("pgn IS NOT NULL").select("pgn")
+        df = pgn_not_null.pl()
         game_data_list = []
         for game_number, i in tqdm.tqdm(enumerate(df.iter_rows(), start=1)):
             pgn_string = i[0]
             pgn = io.StringIO(pgn_string)
             game = chess.pgn.read_game(pgn)
             if game is None:
-                print("Failed to parse PGN")
+                logger.info("Failed to parse PGN")
             else:
                 board = game.board()
                 headers = game.headers
                 for move_number, move in enumerate(game.mainline_moves(), start=1):
                     board.push(move)
-                    stockfish.set_fen_position(board.fen())
-                    eval_info = stockfish.get_evaluation()
+                    self.stockfish.set_fen_position(board.fen())
+                    eval_info = self.stockfish.get_evaluation()
                     game_info = {
                         "Game_Number": game_number,
                         "Game_Link": headers['Link'],
