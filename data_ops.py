@@ -14,7 +14,7 @@ class ChessDataOps():
         }
         self.duckdb_conn = None
         self.days_back = 760
-
+    
     def get_data(self, url: str) -> dict:
         headers = self.headers
         response = r.get(url, headers=headers)
@@ -43,7 +43,7 @@ class ChessDataOps():
     def get_rel_from_parquet(self, file_path: Path) -> duckdb.DuckDBPyRelation:
         if self.duckdb_conn is None:
             self.duckdb_conn = duckdb.connect()
-        file_name = file_path.name
+        file_name = str(file_path)
         rel = self.duckdb_conn.from_parquet(file_name)
         return rel
 
