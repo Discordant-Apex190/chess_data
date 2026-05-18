@@ -13,5 +13,4 @@ dependencies = [
     "python-dateutil>=2.9.0.post0",
     "requests>=2.34.1",
     "stockfish>=5.2.0",
-    "tqdm>=4.67.3",
 ]

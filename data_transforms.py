@@ -3,7 +3,6 @@ import io
 from stockfish import Stockfish
 from pathlib import Path
 from data_ops import ChessDataOps
-import tqdm
 import polars as pl
 from datetime import date
 from base_logger import logger
@@ -42,7 +41,7 @@ class ChessDataTransforms():
         pgn_not_null = rel.filter("pgn IS NOT NULL").select("pgn")
         df = pgn_not_null.pl()
         game_data_list = []
-        for game_number, i in tqdm.tqdm(enumerate(df.iter_rows(), start=1)):
+        for game_number, i in enumerate(df.iter_rows(), start=1):
             pgn_string = i[0]
             pgn = io.StringIO(pgn_string)
             game = chess.pgn.read_game(pgn)
