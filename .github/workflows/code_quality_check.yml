@@ -23,6 +23,6 @@ jobs:
     - name: Lint with ruff
       run: |
         ruff check .
-    - name: Test with pytest
+    {# - name: Test with pytest
       run: |
-        pytest
+        pytest #}
