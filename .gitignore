@@ -5,11 +5,10 @@ build/
 dist/
 wheels/
 *.egg-info
+pytest_cache/
 
 # Virtual environments
 .venv
 
-/data
-/logs
-
-/.pytest_cache
+/backend/pipeline/data
+/backend/pipeline/logs

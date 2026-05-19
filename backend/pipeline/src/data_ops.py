@@ -1,10 +1,11 @@
+from typing import Any
 import requests as r
 import polars as pl
 import duckdb
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from pathlib import Path
-from base_logger import logger
+from backend.pipeline.src.base_logger import logger
 
 
 class ChessDataOps():
@@ -29,11 +30,11 @@ class ChessDataOps():
         self.duckdb_conn = None
         self.days_back = 760
     
-    def get_data(self, url: str) -> dict:
+    def get_data(self, url: str) -> Any:
         headers = self.headers
         response = r.get(url, headers=headers)
         response.raise_for_status()
-        return response.json()
+        return response
 
     def iterate_games(self) -> pl.DataFrame:
         """
@@ -50,7 +51,7 @@ class ChessDataOps():
             starting_date_month = f"{starting_date.month:02d}"
             url = f"{self.base_url}/{self.username}/games/{starting_date.year}/{starting_date_month}"
             try:
-                data = self.get_data(url)
+                data = self.get_data(url).json()
                 data_list.append(data)
             except r.exceptions.HTTPError as e:
                 logger.info(f"Failed to fetch {starting_date.year}-{starting_date_month}: {e}")

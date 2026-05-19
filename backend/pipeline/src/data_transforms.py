@@ -2,10 +2,10 @@ import chess.pgn
 import io
 from stockfish import Stockfish
 from pathlib import Path
-from data_ops import ChessDataOps
+from backend.pipeline.src.data_ops import ChessDataOps
 import polars as pl
 from datetime import date
-from base_logger import logger
+from backend.pipeline.src.base_logger import logger
 
 chess_ops = ChessDataOps()
 class ChessDataTransforms():
@@ -24,8 +24,9 @@ class ChessDataTransforms():
         self.stockfish.set_depth(10)
         
         today = date.today().isoformat()
-        self.initial_chess_data = Path(f"data/initial_chess_data_{today}.parquet")
-        self.cleaned_chess_data = Path(f"data/cleaned_chess_data_{today}.parquet")
+        _pipeline_dir = Path(__file__).parent.parent
+        self.initial_chess_data = _pipeline_dir / "data" / f"initial_chess_data_{today}.parquet"
+        self.cleaned_chess_data = _pipeline_dir / "data" / f"cleaned_chess_data_{today}.parquet"
     
     def clean_data(self) -> None:
         """
@@ -54,12 +55,14 @@ class ChessDataTransforms():
                     board.push(move)
                     self.stockfish.set_fen_position(board.fen())
                     eval_info = self.stockfish.get_evaluation()
+                    wdl_stats =  self.stockfish.get_wdl_stats()
                     game_info = {
                         "Game_Number": game_number,
                         "Game_Link": headers['Link'],
                         "Move_Number": move_number,
                         "Move": str(move),
                         "Evaluation": eval_info,
+                        "WDL Stats": wdl_stats,
                         "White": headers['White'],
                         "Black": headers['Black'],
                         "Start_Date": headers['Date'],
