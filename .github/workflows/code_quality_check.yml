@@ -21,7 +21,3 @@ jobs:
       run: uv sync --project backend/pipeline
     - name: Lint with ruff
       run: uv run --project backend/pipeline ruff check .
-    {# - name: Test with pytest
-      run: uv run --project backend/pipeline pytest backend/pipeline/tests/ -v
-      env:
-        PYTHONPATH: ${{ github.workspace }} #}
