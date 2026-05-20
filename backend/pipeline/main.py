@@ -9,8 +9,9 @@ def main():
     """
     Main pipeline to run the flow of my chess data
     """
+    
     chess_transforms = ChessDataTransforms()
-    chess_transforms.clean_data()
+    chess_transforms.stockfish_evals()
 
 if __name__ == "__main__":
     main()
