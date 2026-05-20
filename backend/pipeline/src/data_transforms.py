@@ -18,8 +18,8 @@ class ChessDataTransforms():
         stockfish (Stockfish): Initialize stockfish
 
     """
-    def __init__(self):
-        self.chess_ops = ChessDataOps()
+    def __init__(self, username: str = "chesswizinterm"):
+        self.chess_ops = ChessDataOps(username = username)
         stockfish_path = Path(r"C:\Users\Chris\stockfish\stockfish-windows-x86-64-avx2.exe")
         self.stockfish = Stockfish(path = str(stockfish_path))
         self.stockfish.set_depth(18)

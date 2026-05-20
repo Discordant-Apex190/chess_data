@@ -21,8 +21,8 @@ class ChessDataOps():
 
     """
 
-    def __init__(self):
-        self.username = "chesswizinterm"
+    def __init__(self, username: str = "chesswizinterm"):
+        self.username = username
         self.base_url = "https://api.chess.com/pub/player"
         self.headers = {
             'User-Agent': 'Chess Data Project/1.0 Username: chesswizinterm Contact: chriseaton190@gmail.com'
@@ -77,7 +77,7 @@ class ChessDataOps():
 
     def get_rel_from_parquet(self, file_path: Path) -> duckdb.DuckDBPyRelation:
         """
-        Saves initial chess data in a parquet file
+        Returns rel for the given duckdb
         Args:
             file_path: The Path object where you want to get data
         Returns:
