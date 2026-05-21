@@ -17,6 +17,7 @@ The main goal is to identify my bad habits and recurring mistakes:
 - Where do I consistently miss better alternatives?
 - Opening/middlegame/endgame strengths and weaknesses
 - Patterns in blunders and inaccuracies
+- Add an agent/agents to analyze my game deeper and give a narrative
 
 Frontend coming eventually to visualize all this.
 
