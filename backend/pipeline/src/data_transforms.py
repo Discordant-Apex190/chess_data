@@ -70,7 +70,7 @@ class ChessDataTransforms():
                 for move_number, move in tqdm.tqdm(enumerate(game.mainline_moves(), start=1)):
                     board.push(move)
                     self.stockfish.set_fen_position(board.fen())
-                    wdl_stats = self.stockfish..get_wdl_stats()
+                    wdl_stats = self.stockfish.get_wdl_stats()
                     eval_info = self.stockfish.get_evaluation()
                     game_info = {
                         "Game_Number": game_number,
