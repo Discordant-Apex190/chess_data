@@ -12,3 +12,5 @@ pytest_cache/
 
 /backend/pipeline/data
 /backend/pipeline/logs
+
+.logs
