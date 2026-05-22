@@ -1,0 +1,18 @@
+secrets.env
+.env
+*.env
+
+# Git
+.git
+.gitignore
+
+# Python
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.venv
+**/*.egg-info
+
+# Local dev
+.vscode
+README.md

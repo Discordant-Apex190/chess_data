@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import polars as pl
@@ -10,6 +11,23 @@ from backend.pipeline.src.data_transforms import ChessDataTransforms
 import backend.agent.agent_run as agent_run
 
 load_dotenv(Path(__file__).parent.parent.parent / "secrets.env")
+
+_REQUIRED_ENV_VARS = [
+    "GOOGLE_API_KEY",
+    "LINKUP_API_KEY",
+    "SLACK_API_KEY",
+    "SLACK_CHANNEL_ID",
+    "MODAL_TOKEN_ID",
+    "MODAL_TOKEN_SECRET",
+    "PREFECT_API_URL",
+    "PREFECT_API_KEY",
+]
+
+def _validate_env() -> None:
+    missing = [var for var in _REQUIRED_ENV_VARS if not os.getenv(var)]
+    if missing:
+        raise EnvironmentError(f"Missing required environment variables: {', '.join(missing)}")
+    logger.info("Environment validation passed — all required vars are set")
 
 
 @task(cache_policy=NO_CACHE)
@@ -48,6 +66,7 @@ def main():
     Main pipeline: fetch chess data, run Stockfish evals, then generate and
     send the weekly chess report via the agent.
     """
+    _validate_env()
     chess_transforms = ChessDataTransforms()
     fetch_chess_data(chess_transforms)
     df = clean_chess_data(chess_transforms)
