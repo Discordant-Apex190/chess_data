@@ -109,6 +109,7 @@ class ChessDataTransforms():
                         
                     }
                     game_data_list.append(game_info)
+                logger.info(f"Game {game_number} processed ({move_number} moves)")
         transformed_data = pl.DataFrame(game_data_list)
         transformed_data.write_parquet(file=self.cleaned_chess_data)
         logger.info(f"Saved {len(game_data_list)} move records to {self.cleaned_chess_data}")
