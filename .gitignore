@@ -14,3 +14,7 @@ pytest_cache/
 /backend/pipeline/logs
 
 .logs
+
+/secrets.env
+
+/logs
