@@ -68,3 +68,6 @@ STOCKFISH_PATH=        # defaults to C:\Users\Chris\stockfish\... locally, /usr/
 2. Build Pack: `Dockerfile`
 3. Add all environment variables above in Coolify's env settings
 4. Deploy — the container registers the flow with Prefect Cloud and waits for the cron schedule
+
+## Logging
+I have dashboards setup in new relic to analyze logs that come in

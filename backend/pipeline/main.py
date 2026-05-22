@@ -54,6 +54,7 @@ def main():
     parquet_path = run_stockfish_evals(chess_transforms, df)
     cleanup_initial_data(chess_transforms.initial_chess_data)
     run_agent(parquet_path)
+    logger.info(f"Pipeline complete — {len(df)} games processed, report sent")
 
 
 if __name__ == "__main__":

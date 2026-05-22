@@ -1,3 +1,6 @@
+
+# This whole section was for coming up with accuracy metrics for the agent to be able to used. 
+# I used lichess metrics here: https://lichess.org/page/accuracy
 import duckdb
 from pathlib import Path
 

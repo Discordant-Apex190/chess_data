@@ -25,6 +25,7 @@ class ChessDataTransforms():
             os.getenv("STOCKFISH_PATH", r"C:\Users\Chris\stockfish\stockfish-windows-x86-64-avx2.exe")
         )
         self._stockfish_depth = 18
+        logger.info(f"Initializing Stockfish from {stockfish_path} at depth {self._stockfish_depth}")
         self.stockfish = Stockfish(path = str(stockfish_path))
         self.stockfish.set_depth(self._stockfish_depth)
         
@@ -80,15 +81,18 @@ class ChessDataTransforms():
         game_data_list = []
         for game_number, game in tqdm.tqdm(enumerate(self.analyze_game(df), start=1)):
             if game is None:
-                logger.info("Failed to parse PGN")
+                logger.warning(f"Failed to parse PGN for game {game_number}")
             else:
                 board = game.board()
                 headers = game.headers
+                logger.debug(f"Evaluating game {game_number}: {headers.get('White', '?')} vs {headers.get('Black', '?')}")
                 for move_number, move in tqdm.tqdm(enumerate(game.mainline_moves(), start=1)):
                     board.push(move)
                     self.stockfish.set_fen_position(board.fen())
                     wdl_stats = self.stockfish.get_wdl_stats()
                     eval_info = self.stockfish.get_evaluation()
+                    if wdl_stats is None or eval_info is None:
+                        logger.warning(f"Stockfish returned None for game {game_number}, move {move_number}")
                     game_info = {
                         "Game_Number": game_number,
                         "Game_Link": headers['Link'],

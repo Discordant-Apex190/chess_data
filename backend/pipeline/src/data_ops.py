@@ -31,6 +31,7 @@ class ChessDataOps():
         self.days_back = 760
     
     def get_data(self, url: str) -> Any:
+        logger.debug(f"GET {url}")
         headers = self.headers
         response = r.get(url, headers=headers)
         response.raise_for_status()
@@ -46,6 +47,7 @@ class ChessDataOps():
         """
         current_date = datetime.today()
         starting_date = datetime.today() - timedelta(days = self.days_back)
+        logger.info(f"Fetching games for {self.username} from {starting_date.strftime('%Y-%m')} to {current_date.strftime('%Y-%m')}")
         data_list = []
         while starting_date < current_date:
             starting_date_month = f"{starting_date.month:02d}"
@@ -53,13 +55,15 @@ class ChessDataOps():
             try:
                 data = self.get_data(url).json()
                 data_list.append(data)
+                logger.debug(f"Fetched {starting_date.year}-{starting_date_month}: {len(data.get('games', []))} games")
             except r.exceptions.HTTPError as e:
-                logger.info(f"Failed to fetch {starting_date.year}-{starting_date_month}: {e}")
+                logger.warning(f"Failed to fetch {starting_date.year}-{starting_date_month}: {e}")
             except Exception as e:
-                logger.info(f"Unexpected error for {starting_date.year}-{starting_date_month}: {e}")
+                logger.error(f"Unexpected error for {starting_date.year}-{starting_date_month}: {e}")
             starting_date = starting_date + relativedelta(months=1)
 
         df = pl.DataFrame(data_list)
+        logger.info(f"Collected {len(data_list)} months of game data for {self.username}")
         return df
 
     def save_data(self, file_path: Path) -> None:
@@ -70,9 +74,11 @@ class ChessDataOps():
         Returns:
             None
         """
+        logger.info(f"Saving raw game data to {file_path}")
         all_data = self.iterate_games()
         unnested_data = all_data.explode("games").unnest()
         unnested_data.write_parquet(file_path)
+        logger.info(f"Saved {len(unnested_data)} raw game records to {file_path}")
         return None
 
     def get_rel_from_parquet(self, file_path: Path) -> duckdb.DuckDBPyRelation:
@@ -84,8 +90,10 @@ class ChessDataOps():
             rel: Relationship object from duckdb, a nice base to build queries from
         """
         if self.duckdb_conn is None:
+            logger.debug("Creating new DuckDB connection")
             self.duckdb_conn = duckdb.connect()
         file_name = str(file_path)
+        logger.debug(f"Loading parquet relation from {file_name}")
         rel = self.duckdb_conn.from_parquet(file_name)
         return rel
 
