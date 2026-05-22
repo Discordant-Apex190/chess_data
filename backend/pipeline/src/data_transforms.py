@@ -30,8 +30,10 @@ class ChessDataTransforms():
         
         today = date.today().isoformat()
         _pipeline_dir = Path(__file__).parent.parent
-        self.initial_chess_data = _pipeline_dir / "data" / f"initial_chess_data_{today}.parquet"
-        self.cleaned_chess_data = _pipeline_dir / "data" / f"cleaned_chess_data_{today}.parquet"
+        _data_dir = _pipeline_dir / "data"
+        _data_dir.mkdir(parents=True, exist_ok=True)
+        self.initial_chess_data = _data_dir / f"initial_chess_data_{today}.parquet"
+        self.cleaned_chess_data = _data_dir / f"cleaned_chess_data_{today}.parquet"
     
     def fetch_raw_data(self) -> None:
         """

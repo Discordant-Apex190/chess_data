@@ -36,6 +36,9 @@ RUN uv pip install --system \
 # Copy source code
 COPY . .
 
+# Ensure runtime directories exist
+RUN mkdir -p /app/backend/pipeline/data /app/backend/pipeline/logs
+
 # Stockfish binary path on Debian/Ubuntu
 ENV STOCKFISH_PATH=/usr/games/stockfish
 
