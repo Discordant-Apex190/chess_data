@@ -79,14 +79,19 @@ class ChessDataTransforms():
         """
         logger.info(f"Running Stockfish evals (depth={self._stockfish_depth})")
         game_data_list = []
-        for game_number, game in tqdm.tqdm(enumerate(self.analyze_game(df), start=1)):
+        game_bar = tqdm.tqdm(enumerate(self.analyze_game(df), start=1), total=len(df), desc="Games", unit="game")
+        for game_number, game in game_bar:
             if game is None:
                 logger.warning(f"Failed to parse PGN for game {game_number}")
             else:
                 board = game.board()
                 headers = game.headers
-                logger.debug(f"Evaluating game {game_number}: {headers.get('White', '?')} vs {headers.get('Black', '?')}")
-                for move_number, move in tqdm.tqdm(enumerate(game.mainline_moves(), start=1)):
+                white = headers.get('White', '?')
+                black = headers.get('Black', '?')
+                game_bar.set_postfix(white=white, black=black)
+                logger.debug(f"Evaluating game {game_number}: {white} vs {black}")
+                total_moves = game.end().ply()
+                for move_number, move in tqdm.tqdm(enumerate(game.mainline_moves(), start=1), total=total_moves, desc=f"G{game_number}", unit="mv", leave=False):
                     board.push(move)
                     self.stockfish.set_fen_position(board.fen())
                     wdl_stats = self.stockfish.get_wdl_stats()
