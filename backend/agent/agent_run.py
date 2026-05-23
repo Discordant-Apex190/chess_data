@@ -127,7 +127,7 @@ def main(parquet_path: Path | None = None) -> None:
 
     logger.info("Creating Modal sandbox")
     app = modal.App.lookup("chess-app", create_if_missing=True)
-    _modal_sandbox = modal.Sandbox.create(app=app)
+    _modal_sandbox = modal.Sandbox.create(app=app, timeout=3600)
     _backend = ModalSandbox(sandbox=_modal_sandbox)
 
     upload_data(resolved_path)
